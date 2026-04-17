@@ -103,6 +103,21 @@ export function PronunciationCheck({ phrase, onResult, compact = false }: Props)
   const start = useCallback(async () => {
     setErr(null);
     setScoreData(null);
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setErr("Microphone not available \u2014 this site must be served over HTTPS");
+      setState("error");
+      return;
+    }
+    try {
+      const perm = await navigator.permissions.query({ name: "microphone" as PermissionName });
+      if (perm.state === "denied") {
+        setErr("Microphone access was denied \u2014 please allow it in your browser settings and reload");
+        setState("error");
+        return;
+      }
+    } catch {
+      // permissions API not supported
+    }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
@@ -123,7 +138,12 @@ export function PronunciationCheck({ phrase, onResult, compact = false }: Props)
       mediaRef.current = mr;
       setState("recording");
     } catch (e) {
-      setErr(`Microphone: ${e instanceof Error ? e.message : String(e)}`);
+      const msg = e instanceof Error ? e.message : String(e);
+      if (msg.includes("NotAllowedError") || msg.includes("Permission")) {
+        setErr("Microphone access denied \u2014 tap the lock icon in your browser's address bar to allow it, then reload");
+      } else {
+        setErr(`Microphone: ${msg}`);
+      }
       setState("error");
     }
   }, [uploadAndScore]);

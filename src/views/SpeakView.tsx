@@ -130,6 +130,21 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
   const startRecording = useCallback(async () => {
     setErr(null);
     setAttempt(null);
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setErr("Microphone not available \u2014 this site must be served over HTTPS");
+      setState("error");
+      return;
+    }
+    try {
+      const perm = await navigator.permissions.query({ name: "microphone" as PermissionName });
+      if (perm.state === "denied") {
+        setErr("Microphone access was denied \u2014 please allow it in your browser settings and reload");
+        setState("error");
+        return;
+      }
+    } catch {
+      // permissions API not supported
+    }
     try {
       setPermissionAsked(true);
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -152,7 +167,11 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
       setState("recording");
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      setErr(`Microphone error: ${msg}`);
+      if (msg.includes("NotAllowedError") || msg.includes("Permission")) {
+        setErr("Microphone access denied \u2014 tap the lock icon in your browser's address bar to allow it, then reload");
+      } else {
+        setErr(`Microphone error: ${msg}`);
+      }
       setState("error");
     }
   }, []);
