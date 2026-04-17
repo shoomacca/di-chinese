@@ -36,7 +36,7 @@ export function DrillView({ play, playing }: Props) {
     <div>
       <div style={{ marginBottom: 14 }}>
         <div style={{ fontSize: 13, opacity: 0.5, marginBottom: 8 }}>
-          Listen \u2192 Repeat aloud \u2192 Reveal \u2192 Next
+          Listen → Repeat aloud → Reveal → Next
         </div>
         <div className="chip-scroll" style={{ display: "flex", gap: 6, overflowX: "auto" }}>
           {CATEGORIES.map((c) => (
@@ -158,7 +158,7 @@ export function DrillView({ play, playing }: Props) {
                   fontWeight: 600,
                 }}
               >
-                Reveal \u2192
+                Reveal →
               </button>
             </div>
           </>
@@ -199,7 +199,7 @@ export function DrillView({ play, playing }: Props) {
                 boxShadow: "0 4px 16px rgba(22,163,74,0.3)",
               }}
             >
-              Next Phrase \u2192
+              Next Phrase →
             </button>
           </>
         )}

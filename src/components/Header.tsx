@@ -24,7 +24,7 @@ export function Header({ learnedCount, total }: Props) {
             Mandarin Chinese
           </div>
           <div style={{ fontSize: 24, fontWeight: 800, fontFamily: "'Crimson Pro', Georgia, serif", letterSpacing: "-0.03em" }}>
-            {"\u5B66\u4E2D\u6587!"}
+            {"学中文!"}
           </div>
         </div>
         <div style={{ textAlign: "right" }}>

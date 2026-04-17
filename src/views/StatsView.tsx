@@ -80,7 +80,7 @@ export function StatsView({ progress }: Props) {
                 {d.learned}/{d.total}
                 {d.verified > 0 && (
                   <span style={{ marginLeft: 6, color: "#2563eb", fontWeight: 700 }}>
-                    {"\u00B7"} {d.verified}{"\u2713"}
+                    {"·"} {d.verified}{"✓"}
                   </span>
                 )}
               </span>

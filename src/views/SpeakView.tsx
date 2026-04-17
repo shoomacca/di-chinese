@@ -131,14 +131,14 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
     setErr(null);
     setAttempt(null);
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setErr("Microphone not available \u2014 this site must be served over HTTPS");
+      setErr("Microphone not available — this site must be served over HTTPS");
       setState("error");
       return;
     }
     try {
       const perm = await navigator.permissions.query({ name: "microphone" as PermissionName });
       if (perm.state === "denied") {
-        setErr("Microphone access was denied \u2014 please allow it in your browser settings and reload");
+        setErr("Microphone access was denied — please allow it in your browser settings and reload");
         setState("error");
         return;
       }
@@ -168,7 +168,7 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       if (msg.includes("NotAllowedError") || msg.includes("Permission")) {
-        setErr("Microphone access denied \u2014 tap the lock icon in your browser's address bar to allow it, then reload");
+        setErr("Microphone access denied — tap the lock icon in your browser's address bar to allow it, then reload");
       } else {
         setErr(`Microphone error: ${msg}`);
       }
@@ -188,12 +188,12 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
     async (blob: Blob, mimeType: string) => {
       const phrase = curRef.current;
       if (!phrase) {
-        setErr("No phrase selected \u2014 try again");
+        setErr("No phrase selected — try again");
         setState("error");
         return;
       }
       if (blob.size === 0) {
-        setErr("Recording was empty \u2014 try holding the button longer");
+        setErr("Recording was empty — try holding the button longer");
         setState("error");
         return;
       }
@@ -282,7 +282,7 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
     <div>
       <div style={{ marginBottom: 10 }}>
         <div style={{ fontSize: 13, opacity: 0.5, marginBottom: 8 }}>
-          Listen \u2192 Record \u2192 Compare (uses whisper-cn.bsbsbs.au)
+          Listen → Record → Compare (uses whisper-cn.bsbsbs.au)
         </div>
         <div className="chip-scroll" style={{ display: "flex", gap: 6, overflowX: "auto" }}>
           {CATEGORIES.map((c) => (
@@ -320,7 +320,7 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
       >
         <div style={{ fontSize: 11, opacity: 0.4, marginBottom: 4, letterSpacing: 2, textTransform: "uppercase" }}>
           {CAT_EMOJI[cur.cat]} {cur.cat}
-          {learned && <span style={{ marginLeft: 8, color: "#4ade80" }}>{"\u2713"}</span>}
+          {learned && <span style={{ marginLeft: 8, color: "#4ade80" }}>{"✓"}</span>}
         </div>
         <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Crimson Pro', Georgia, serif", marginBottom: 4 }}>
           {cur.zh}
@@ -467,7 +467,7 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
             ))}
           </div>
           <div style={{ fontSize: 12, opacity: 0.55, marginBottom: 12 }}>
-            exact: {attempt.result.charPct}% \u2014 relaxed: {attempt.result.charPctNoTone}%
+            exact: {attempt.result.charPct}% — relaxed: {attempt.result.charPctNoTone}%
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             <button
@@ -505,7 +505,7 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
                 fontWeight: 700,
               }}
             >
-              Next \u2192
+              Next →
             </button>
           </div>
         </div>

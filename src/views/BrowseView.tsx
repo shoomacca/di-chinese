@@ -176,7 +176,7 @@ export function BrowseView({ progress, onLearn, onVerified, onResetPhrase, play,
                         textTransform: "uppercase",
                       }}
                     >
-                      Say it aloud {verified ? "\u00B7 verified" : `\u00B7 \u2265 ${VERIFIED_THRESHOLD}% to verify`}
+                      Say it aloud {verified ? "· verified" : `· ≥ ${VERIFIED_THRESHOLD}% to verify`}
                     </div>
                     <PronunciationCheck
                       phrase={p}

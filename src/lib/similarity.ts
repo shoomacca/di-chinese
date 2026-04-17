@@ -3,7 +3,7 @@
 export function normalize(s: string): string {
   return s
     .toLowerCase()
-    .replace(/[.,!?;:\u2026"'()\[\]\uFF01\uFF0C\uFF1F\uFF1B\uFF1A\u3002\u300C\u300D\u300E\u300F\u3010\u3011]/g, "")
+    .replace(/[.,!?;:…"'()\[\]！，？；：。「」『』【】]/g, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -12,12 +12,12 @@ export function normalize(s: string): string {
  *  Also handles common Whisper transcription output. */
 export function stripTones(s: string): string {
   const map: Record<string, string> = {
-    "\u0101": "a", "\u00E1": "a", "\u01CE": "a", "\u00E0": "a",
-    "\u0113": "e", "\u00E9": "e", "\u011B": "e", "\u00E8": "e",
-    "\u012B": "i", "\u00ED": "i", "\u01D0": "i", "\u00EC": "i",
-    "\u014D": "o", "\u00F3": "o", "\u01D2": "o", "\u00F2": "o",
-    "\u016B": "u", "\u00FA": "u", "\u01D4": "u", "\u00F9": "u",
-    "\u01D6": "\u00FC", "\u01D8": "\u00FC", "\u01DA": "\u00FC", "\u01DC": "\u00FC",
+    "ā": "a", "á": "a", "ǎ": "a", "à": "a",
+    "ē": "e", "é": "e", "ě": "e", "è": "e",
+    "ī": "i", "í": "i", "ǐ": "i", "ì": "i",
+    "ō": "o", "ó": "o", "ǒ": "o", "ò": "o",
+    "ū": "u", "ú": "u", "ǔ": "u", "ù": "u",
+    "ǖ": "ü", "ǘ": "ü", "ǚ": "ü", "ǜ": "ü",
   };
   return [...s].map((ch) => map[ch] ?? ch).join("");
 }

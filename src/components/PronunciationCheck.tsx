@@ -71,7 +71,7 @@ export function PronunciationCheck({ phrase, onResult, compact = false }: Props)
         return;
       }
       if (blob.size === 0) {
-        setErr("Recording empty \u2014 hold the button longer");
+        setErr("Recording empty — hold the button longer");
         setState("error");
         return;
       }
@@ -104,14 +104,14 @@ export function PronunciationCheck({ phrase, onResult, compact = false }: Props)
     setErr(null);
     setScoreData(null);
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setErr("Microphone not available \u2014 this site must be served over HTTPS");
+      setErr("Microphone not available — this site must be served over HTTPS");
       setState("error");
       return;
     }
     try {
       const perm = await navigator.permissions.query({ name: "microphone" as PermissionName });
       if (perm.state === "denied") {
-        setErr("Microphone access was denied \u2014 please allow it in your browser settings and reload");
+        setErr("Microphone access was denied — please allow it in your browser settings and reload");
         setState("error");
         return;
       }
@@ -140,7 +140,7 @@ export function PronunciationCheck({ phrase, onResult, compact = false }: Props)
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       if (msg.includes("NotAllowedError") || msg.includes("Permission")) {
-        setErr("Microphone access denied \u2014 tap the lock icon in your browser's address bar to allow it, then reload");
+        setErr("Microphone access denied — tap the lock icon in your browser's address bar to allow it, then reload");
       } else {
         setErr(`Microphone: ${msg}`);
       }
@@ -221,7 +221,7 @@ export function PronunciationCheck({ phrase, onResult, compact = false }: Props)
         )}
         {state === "uploading" && (
           <div style={{ padding: "8px 12px", fontSize: compact ? 13 : 15, opacity: 0.7 }}>
-            {IC.loading} Transcribing\u2026
+            {IC.loading} Transcribing…
           </div>
         )}
         {state === "result" && scoreData && (
@@ -335,7 +335,7 @@ export function PronunciationCheck({ phrase, onResult, compact = false }: Props)
             ))}
           </div>
           <div style={{ fontSize: 11, color: "rgba(42,24,24,0.55)", marginTop: 6 }}>
-            exact {scoreData.scoreResult.charPct}% \u00B7 relaxed {scoreData.scoreResult.charPctNoTone}%
+            exact {scoreData.scoreResult.charPct}% · relaxed {scoreData.scoreResult.charPctNoTone}%
           </div>
         </div>
       )}

@@ -160,7 +160,7 @@ export function FlashcardView({ progress, onRate, play, playing }: Props) {
           <>
             <div style={{ fontSize: 30, fontWeight: 700, fontFamily: "'Crimson Pro', Georgia, serif", marginBottom: 10 }}>{cur.zh}</div>
             <ListenBtn phrase={cur} play={play} playing={playing} size="lg" />
-            <div style={{ fontSize: 13, opacity: 0.4, marginTop: 14 }}>listen \u2192 repeat \u2192 tap to reveal</div>
+            <div style={{ fontSize: 13, opacity: 0.4, marginTop: 14 }}>listen → repeat → tap to reveal</div>
           </>
         ) : (
           <>
