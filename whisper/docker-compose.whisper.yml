@@ -1,0 +1,34 @@
+services:
+  whisper-cn:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dichinese-whisper:latest
+    container_name: dichinese-whisper
+    restart: unless-stopped
+    environment:
+      ALLOWED_ORIGINS: "https://china.bsbsbs.au,https://di-chinese.vercel.app,http://localhost:5174"
+      ALLOWED_ORIGIN_REGEX: "^https://.*\\.vercel\\.app$$"
+      WHISPER_MODEL: "openai/whisper-small"
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz', timeout=5)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=root_traefik"
+      - "traefik.http.routers.dichinese-whisper.rule=Host(`whisper-cn.bsbsbs.au`)"
+      - "traefik.http.routers.dichinese-whisper.entrypoints=websecure"
+      - "traefik.http.routers.dichinese-whisper.tls=true"
+      - "traefik.http.routers.dichinese-whisper.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.dichinese-whisper.loadbalancer.server.port=8000"
+    networks:
+      - root_traefik
+
+networks:
+  root_traefik:
+    external: true
