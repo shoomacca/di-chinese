@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { LevelFilter } from "../components/LevelFilter";
 import { ListenBtn } from "../components/ListenBtn";
 import { CATEGORIES, IC } from "../data/categories";
 import { PHRASES } from "../data/phrases";
 import { shuffle } from "../lib/srs";
-import type { Phrase } from "../types";
+import type { Level, Phrase } from "../types";
 
 type Step = "listen" | "repeat" | "reveal";
 
@@ -14,16 +15,18 @@ interface Props {
 
 export function DrillView({ play, playing }: Props) {
   const [cat, setCat] = useState<string>("All");
+  const [lv, setLv] = useState<Level | "All">("All");
   const [pool, setPool] = useState<Phrase[]>([]);
   const [idx, setIdx] = useState(0);
   const [step, setStep] = useState<Step>("listen");
 
   useEffect(() => {
-    const p = cat === "All" ? PHRASES : PHRASES.filter((x) => x.cat === cat);
+    let p = cat === "All" ? PHRASES : PHRASES.filter((x) => x.cat === cat);
+    if (lv !== "All") p = p.filter((x) => x.lv === lv);
     setPool(shuffle(p));
     setIdx(0);
     setStep("listen");
-  }, [cat]);
+  }, [cat, lv]);
 
   const cur = pool[idx];
   if (!cur) return <div style={{ textAlign: "center", padding: 40, opacity: 0.5 }}>No phrases</div>;
@@ -38,6 +41,7 @@ export function DrillView({ play, playing }: Props) {
         <div style={{ fontSize: 13, opacity: 0.5, marginBottom: 8 }}>
           Listen → Repeat aloud → Reveal → Next
         </div>
+        <LevelFilter level={lv} onChange={setLv} />
         <div className="chip-scroll" style={{ display: "flex", gap: 6, overflowX: "auto" }}>
           {CATEGORIES.map((c) => (
             <button

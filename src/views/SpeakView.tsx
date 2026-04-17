@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { LevelFilter } from "../components/LevelFilter";
 import { ListenBtn } from "../components/ListenBtn";
 import { CAT_EMOJI, CATEGORIES, IC } from "../data/categories";
 import { PHRASES } from "../data/phrases";
 import { scorePronunciation, type ScoreResult } from "../lib/similarity";
 import { shuffle } from "../lib/srs";
-import type { Phrase, ProgressMap } from "../types";
+import type { Level, Phrase, ProgressMap } from "../types";
 
 const WHISPER_URL = ((import.meta.env.VITE_WHISPER_URL as string | undefined) || "https://whisper-cn.bsbsbs.au")
   .trim()
@@ -75,6 +76,7 @@ function timeAgo(ts: number): string {
 
 export function SpeakView({ onRate, progress, play, playing }: Props) {
   const [cat, setCat] = useState<string>("All");
+  const [lv, setLv] = useState<Level | "All">("All");
   const [deck, setDeck] = useState<Phrase[]>([]);
   const [idx, setIdx] = useState(0);
   const [state, setState] = useState<RecState>("idle");
@@ -93,12 +95,13 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
   }, []);
 
   useEffect(() => {
-    const p = cat === "All" ? PHRASES : PHRASES.filter((x) => x.cat === cat);
+    let p = cat === "All" ? PHRASES : PHRASES.filter((x) => x.cat === cat);
+    if (lv !== "All") p = p.filter((x) => x.lv === lv);
     setDeck(shuffle(p));
     setIdx(0);
     setAttempt(null);
     setState("idle");
-  }, [cat]);
+  }, [cat, lv]);
 
   const cur = deck[idx];
 
@@ -284,6 +287,7 @@ export function SpeakView({ onRate, progress, play, playing }: Props) {
         <div style={{ fontSize: 13, opacity: 0.5, marginBottom: 8 }}>
           Listen → Record → Compare (uses whisper-cn.bsbsbs.au)
         </div>
+        <LevelFilter level={lv} onChange={setLv} />
         <div className="chip-scroll" style={{ display: "flex", gap: 6, overflowX: "auto" }}>
           {CATEGORIES.map((c) => (
             <button

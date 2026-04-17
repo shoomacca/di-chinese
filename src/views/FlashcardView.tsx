@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { LevelFilter } from "../components/LevelFilter";
 import { ListenBtn } from "../components/ListenBtn";
 import { CAT_EMOJI, IC } from "../data/categories";
 import { PHRASES } from "../data/phrases";
 import { isDue, shuffle } from "../lib/srs";
-import type { DeckMode, Phrase, ProgressMap } from "../types";
+import type { DeckMode, Level, Phrase, ProgressMap } from "../types";
 
 interface Props {
   progress: ProgressMap;
@@ -14,13 +15,14 @@ interface Props {
 
 export function FlashcardView({ progress, onRate, play, playing }: Props) {
   const [mode, setMode] = useState<DeckMode>("new");
+  const [lv, setLv] = useState<Level | "All">("All");
   const [deck, setDeck] = useState<Phrase[]>([]);
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
 
   const buildDeck = useCallback(() => {
-    let pool = [...PHRASES];
+    let pool = lv === "All" ? [...PHRASES] : PHRASES.filter((p) => p.lv === lv);
     if (mode === "new") {
       pool = pool.filter((p) => !progress[p.id] || progress[p.id].level === 0);
     } else if (mode === "review") {
@@ -29,7 +31,7 @@ export function FlashcardView({ progress, onRate, play, playing }: Props) {
     setDeck(shuffle(pool));
     setIdx(0);
     setFlipped(false);
-  }, [mode, progress]);
+  }, [mode, progress, lv]);
 
   useEffect(() => {
     buildDeck();
@@ -93,6 +95,7 @@ export function FlashcardView({ progress, onRate, play, playing }: Props) {
 
   return (
     <div>
+      <LevelFilter level={lv} onChange={setLv} />
       <div style={{ display: "flex", gap: 6, marginBottom: 10, flexWrap: "wrap", alignItems: "center" }}>
         {(["new", "review", "all"] as DeckMode[]).map((m) => (
           <button

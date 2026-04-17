@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { LevelFilter } from "../components/LevelFilter";
 import { ListenBtn } from "../components/ListenBtn";
 import { PronunciationCheck, VERIFIED_THRESHOLD } from "../components/PronunciationCheck";
 import { CAT_EMOJI, CATEGORIES, IC } from "../data/categories";
 import { PHRASES } from "../data/phrases";
-import type { ProgressMap } from "../types";
+import type { Level, ProgressMap } from "../types";
 
 interface Props {
   progress: ProgressMap;
@@ -16,13 +17,16 @@ interface Props {
 
 export function BrowseView({ progress, onLearn, onVerified, onResetPhrase, play, playing }: Props) {
   const [filter, setFilter] = useState<string>("All");
+  const [lv, setLv] = useState<Level | "All">("All");
   const [expanded, setExpanded] = useState<number | null>(null);
-  const filtered = filter === "All" ? PHRASES : PHRASES.filter((p) => p.cat === filter);
+  let filtered = filter === "All" ? PHRASES : PHRASES.filter((p) => p.cat === filter);
+  if (lv !== "All") filtered = filtered.filter((p) => p.lv === lv);
   const isL = (id: number) => !!progress[id] && progress[id].level > 0;
   const isV = (id: number) => !!progress[id]?.verified;
 
   return (
     <div>
+      <LevelFilter level={lv} onChange={setLv} />
       <div className="chip-scroll" style={{ display: "flex", gap: 8, overflowX: "auto", padding: "0 0 16px" }}>
         {CATEGORIES.map((c) => (
           <button

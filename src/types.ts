@@ -8,9 +8,22 @@ export type Category =
   | "Emergency"
   | "Accommodation";
 
+export type Level = 1 | 2 | 3 | 4 | 5;
+
+export const LEVEL_NAMES: Record<Level, string> = {
+  1: "Starter",
+  2: "Elementary",
+  3: "Intermediate",
+  4: "Upper",
+  5: "Advanced",
+};
+
+export const LEVELS: readonly Level[] = [1, 2, 3, 4, 5];
+
 export interface Phrase {
   id: number;
   cat: Category;
+  lv: Level;
   zh: string;
   py: string;
   en: string;

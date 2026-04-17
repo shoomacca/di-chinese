@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { LevelFilter } from "../components/LevelFilter";
 import { ListenBtn } from "../components/ListenBtn";
 import { IC } from "../data/categories";
 import { PHRASES } from "../data/phrases";
 import { shuffle } from "../lib/srs";
-import type { Phrase, QuizMode } from "../types";
+import type { Level, Phrase, QuizMode } from "../types";
 
 interface Question {
   phrase: Phrase;
@@ -19,13 +20,15 @@ interface Props {
 
 export function QuizView({ onRate, play, playing }: Props) {
   const [qt, setQt] = useState<QuizMode>("listen");
+  const [lv, setLv] = useState<Level | "All">("All");
   const [qs, setQs] = useState<Question[]>([]);
   const [qi, setQi] = useState(0);
   const [sel, setSel] = useState<number | null>(null);
   const [sc, setSc] = useState({ c: 0, t: 0 });
 
   const gen = useCallback(() => {
-    const pool = shuffle(PHRASES).slice(0, 10);
+    const base = lv === "All" ? PHRASES : PHRASES.filter((p) => p.lv === lv);
+    const pool = shuffle(base).slice(0, 10);
     const r: Question[] = pool.map((p) => {
       const w = shuffle(PHRASES.filter((x) => x.id !== p.id)).slice(0, 3);
       return { phrase: p, options: shuffle([p, ...w]), correct: p.id };
@@ -34,7 +37,7 @@ export function QuizView({ onRate, play, playing }: Props) {
     setQi(0);
     setSel(null);
     setSc({ c: 0, t: 0 });
-  }, []);
+  }, [lv]);
 
   useEffect(() => {
     gen();
@@ -101,6 +104,7 @@ export function QuizView({ onRate, play, playing }: Props) {
 
   return (
     <div>
+      <LevelFilter level={lv} onChange={(v) => { setLv(v); gen(); }} />
       <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
         {modes.map((t) => (
           <button
